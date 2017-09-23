@@ -1,6 +1,12 @@
 package com.gerrrry.echoclient;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.ConnectException;
+import java.net.Socket;
+import java.net.UnknownHostException;
 
 import com.gerrrry.echoclient.util.PropertyManager;
 
@@ -11,7 +17,24 @@ public class Application {
     public static void main(String[] args) {
 	loadProperties();
 
-	// TODO: Logic
+	String host = "37.59.51.221";
+	int port = 5107;
+
+	System.out.println("Trying to connect to remote host : " + host + " " + port);
+
+	try (Socket socket = new Socket(host, port)) {
+	    try (PrintWriter writer = new PrintWriter(socket.getOutputStream(), true)) {
+		try (BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
+		    System.out.println(in.readLine());
+		}
+	    }
+	} catch (UnknownHostException e) {
+	    System.err.println("Cannot connect to the remote host : " + host);
+	} catch (ConnectException e) {
+	    System.err.println("Connection refused on the remote port.");
+	} catch (IOException e) {
+	    System.err.println("Cannot read from the remote port : " + port);
+	}
 
 	saveProperties();
     }
