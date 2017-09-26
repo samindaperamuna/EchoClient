@@ -15,10 +15,18 @@ public class Application {
     private static PropertyManager propertyManager;
 
     public static void main(String[] args) {
+	String host = null;
+	int port = 0;
 	loadProperties();
 
-	String host = "37.59.51.221";
-	int port = 5107;
+	// Temporary initialise block.
+	if (args.length != 2) {
+	    host = "37.59.51.221";
+	    port = 5107;
+	} else {
+	    host = args[0];
+	    port = Integer.parseInt(args[1]);
+	}
 
 	System.out.println("Trying to connect to remote host : " + host + " " + port);
 
